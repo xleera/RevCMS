@@ -8,6 +8,7 @@
  */
  
 namespace Revolution\app;
+use Exception;
 
 class core
 {
@@ -82,6 +83,11 @@ class core
 	 */
 	public static function systemError($who, $ex)
 	{
+		if(is_string($ex))
+		{
+			$ex = new Exception($ex);
+		}
+		
 		$params  = array(
 			'who' => $who,
 			'ex.message' => $ex->getMessage(),

@@ -24,9 +24,7 @@
 					{ex.message}
 					</code>
 					<br /><br /><strong>Exception Trace:</strong><br />
-					<pre>
-					{ex.trace}
-					</pre>
+					<pre>{ex.trace}</pre>
 				  </div>
 				</div>
 			</div>

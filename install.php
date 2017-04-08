@@ -27,6 +27,8 @@ spl_autoload_register(function ($className) {
  */
 if(!session_id())
 	session_start();
+
+$_SESSION['last_message'] = '';
  
 /**
  * Clean input 
@@ -45,20 +47,26 @@ function test_data($hostname, $username, $password, $database)
 	try {
 		$connection = new PDO(sprintf('mysql:host=%s;dbname=%s', $hostname, $database), $username, $password, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
 	} catch(PDOException $ex) {
+		$parts   = explode(']', $ex->getMessage());
+		$message = end($parts);
+		$_SESSION['last_message'] = $message;
 		return false;
-		$_SESSION['last_message'] = $ex->getMessage();
 	}
 	
 	return true;
 }
 
+/**
+ * Configuration File
+ */
+$cfile = 'app/management/config.php';
+
 # Clean POST Data
-$_POST = array_merge($_GET, $_POST);
 $_POST = array_map('secure', $_POST);
 
 $action = isset($_POST['action']) ? secure($_POST['action']) : null;
 if(isset($action) && !is_null($action))
-{	
+{
 	# Handle Ajax Request
 	$response = array();
 	switch($action)
@@ -69,7 +77,7 @@ if(isset($action) && !is_null($action))
 				/**
 				 * Create a configuration file
 				 */
-				$config = fopen('app/management/config.php', 'w');
+				$config = fopen($cfile, 'w');
 				$content = file_get_contents('app/management/example.config.php');
 				fwrite($config, sprintf($content, $_POST['db_hostname'], $_POST['db_username'], $_POST['db_password'], $_POST['db_database']));
 				fclose($config);
@@ -147,6 +155,12 @@ if(isset($action) && !is_null($action))
 	echo json_encode($response, JSON_PRETTY_PRINT);
 	exit;
 }
+else {
+	if(file_exists($cfile))
+	{
+		Rev\app\core::systemError('Install', 'Application Already Installed');
+	}
+}
 
 ?>
 <!DOCTYPE html>
@@ -213,7 +227,7 @@ if(isset($action) && !is_null($action))
 		  <fieldset>
 			<h2 class="fs-title">Hotel</h2>
 			<h3 class="fs-subtitle hotel-subtitle">Hotel Settings</h3>
-			<input type="text" name="hotel_url" placeholder="Hotel Url" />
+			<input type="text" name="hotel_url" placeholder="Hotel Url" value="<?php echo str_ireplace('/install.php', '', "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"); ?>" />
 			<input type="text" name="hotel_name" placeholder="Hotel Name" />
 			<input type="text" name="hotel_desc" placeholder="Hotel Description" />
 			<input type="text" name="hotel_theme" list="themes" placeholder="Hotel Theme">
@@ -234,8 +248,8 @@ if(isset($action) && !is_null($action))
 			<h3 class="fs-subtitle">This is used to setup your character</h3>
 			<input type="text" name="acc_email" placeholder="Email" />
 			<input type="text" name="acc_username" placeholder="Username" />
-			<input type="text" name="acc_password" placeholder="Password" />
-			<input type="text" name="acc_rep_password" placeholder="Repeat Password" />
+			<input type="password" name="acc_password" placeholder="Password" />
+			<input type="password" name="acc_rep_password" placeholder="Repeat Password" />
 			<input type="button" name="previous" class="previous action-button" value="Previous" />
 			<input type="submit" name="submit" class="submit action-button" value="Submit" />
 		  </fieldset>

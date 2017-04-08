@@ -95,9 +95,7 @@ $(".db_next").click(function(){
 	current_fs = $(this).parent();
 	next_fs = $(this).parent().next();
 	
-	var can_continue = false;
-	
-	console.log('Database Next Clicked');
+	console.log('Step: Database');
 	
 	var test_hostname = $("input[name=db_hostname]").val();
 	var test_username = $("input[name=db_username]").val();
@@ -141,7 +139,9 @@ $(".db_next").click(function(){
 				});
 		}
 		else {
+			console.log('Application Error: ' + JSON.stringify(data));
 			$('.db-subtitle').html(data.content);
+			animating = false;
 		}
 	});
 });
@@ -158,7 +158,7 @@ $(".hotel_next").click(function(){
 	
 	var can_continue = false;
 	
-	console.log('Hotel Next Clicked');
+	console.log('Step: Hotel');
 	
 	var test_url = $("input[name=hotel_url]").val();
 	var test_name = $("input[name=hotel_name]").val();
