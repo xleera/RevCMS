@@ -36,7 +36,7 @@ else {
 }
 
 /**
- * Revolution Objects
+ * Global Revolution Objects
  */
 $core		= Rev\app\core::getInstance();
 $engine		= Rev\app\engine::getInstance();

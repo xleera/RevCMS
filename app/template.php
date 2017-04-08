@@ -125,14 +125,17 @@ class template
 			$i = 0;
 			$articles = $engine->select('cms_news', array(), '*', array('id' => 'DESC'), 5)->fetch();
 			
-			foreach($articles as $article)
+			if(isset($articles[0]))
 			{
-				$i++;
-				$this->setParams(sprintf('newsTitle-%d', $i), $article['title']);
-				$this->setParams(sprintf('newsID-%d', $i), $article['id']);
-				$this->setParams(sprintf('newsDate-%d', $i), $article['published']);
-				$this->setParams(sprintf('newsCaption-%d', $i), $article['shortstory']);
-				$this->setParams(sprintf('newsIMG-%d', $i), $article['image']);
+				foreach($articles as $article)
+				{
+					$i++;
+					$this->setParams(sprintf('newsTitle-%d', $i), $article['title']);
+					$this->setParams(sprintf('newsID-%d', $i), $article['id']);
+					$this->setParams(sprintf('newsDate-%d', $i), $article['published']);
+					$this->setParams(sprintf('newsCaption-%d', $i), $article['shortstory']);
+					$this->setParams(sprintf('newsIMG-%d', $i), $article['image']);
+				}
 			}
 		}
 	}

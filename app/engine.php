@@ -167,7 +167,7 @@ class engine
 				if($x != 0)
 					$query .= ', ';
 				
-				$query .= "{$column} {$value}";
+				$query .= " {$column} {$value}";
 				$x++;
 			}
 		}
