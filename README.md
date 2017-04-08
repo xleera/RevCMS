@@ -23,7 +23,7 @@ Download [Release 0.0.1](#location) and Unpack the archive to `C:\Inetpub\wwwroo
 
 Before you can install RevCMS a new database must be created, for MySQL a tool like [ MySQL Workbench](https://www.mysql.com/products/workbench/) can be used.
 
-In browser open up `http://<your site>/install.php` for most this will be [http://localhost/install.php](http://localhost/install.php) and fallow the installation instruction on the web page.
+In browser open up `http://<your site>/install.php` for most this will be [http://localhost/install.php](http://localhost/install.php) and follow the installation instruction on the web page.
 
 ----------
 

@@ -38,7 +38,8 @@ class engine
 	
 	public function __construct()
 	{
-		global $_CONFIG;
+		require (dirname(__FILE__) . '/management/config.php');
+		
 		if(!$this->pdo instanceof PDO)
 		{
 			try {
@@ -238,7 +239,7 @@ class engine
 			{
 				if($i != 0)
 					$where .= ' AND ';
-				$where .= "{$key}={$value}";
+				$where .= "{$key}='{$value}'";
 				$i++;
 			}
 		}
