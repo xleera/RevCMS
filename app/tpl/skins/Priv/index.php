@@ -7,7 +7,7 @@
 		<base href="{url}"/>
 
 		<title>{hotelName} - Welcome</title>
-		<link rel="stylesheet" type="text/css" href="{url}/app/tpl/skins/Priv/styles/global.css" />
+		<link rel="stylesheet" type="text/css" href="{url}/app/tpl/skins/Priv/styles/global.css?file={rand}" />
 		<meta name="description" content="{hotelDesc}"/>
 	</head>
 	<body>

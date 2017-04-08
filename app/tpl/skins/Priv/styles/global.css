@@ -81,7 +81,7 @@ input, .input
 	margin-top: 7px !important;
 	padding: 15px;
 		
-	width: 348px;
+	width: 360px;
 	height: auto;
 		
 	text-align: left !important;
@@ -221,6 +221,8 @@ input, .input
 .content .login, .content .register
 {
 	font-weight: bold;
+	margin-right: 5px;
+	margin-left: 5px;
 }
 
 .login p input
@@ -235,7 +237,7 @@ input, .input
 
 .content .small
 {
-	width: 149px;
+	width: 150px;
 }
 
 .content .register .small
@@ -528,4 +530,20 @@ input, .input
 .pixels
 {
 	background: url(../images/icons.png) 0px -20px no-repeat;
+}
+
+.padding-10 {
+	padding: 10px !important;
+}
+
+.padding-20 {
+	padding: 20px !important;
+}
+
+.padding-30 {
+	padding: 30px !important;
+}
+
+.margin-10 {
+	margin: 10px !important;
 }

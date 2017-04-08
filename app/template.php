@@ -85,6 +85,11 @@ class template
 		$this->setParams('external_texts',	$core->getHotelExternalTexts());
 		$this->setParams('swf_folder',	$core->getHotelSwfFolder());
 		
+		/**
+		 * This is to make sure css is not cached, when developing
+		 */
+		$this->setParams('rand', sha1(rand(2, 888)));
+		
 		if($users->isLogged())
 		{
 			$this->setParams('username',	$users->getInfo($_SESSION['account']['id'], 'username'));

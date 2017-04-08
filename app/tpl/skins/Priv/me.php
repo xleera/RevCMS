@@ -48,7 +48,7 @@
 					
 				<div class="balance">
 					<p class="credits"><b>{coins}</b> Credits</p>
-					<p class="pixels"><b>{activitypoints}</b> Pixels</p>
+					<p class="pixels"><b>{pixels}</b> Pixels</p>
 				</div>
 			</div>
 		</div>		
