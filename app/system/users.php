@@ -4,12 +4,13 @@
  *
  * @author	Kryptos
  * @author	GarettM
- * @version	0.8.1
+ * @version	0.0.1
  */
  
-namespace Revolution\app;
+namespace Revolution\App\System;
+use PDO;
 
-class users
+class Users
 {
 	/**
 	 * @var self
@@ -29,7 +30,7 @@ class users
 	}
 	
 	/**
-	 * @var \Revolution\app\engine
+	 * @var \Revolution\App\System\Engine
 	 */
 	protected $engine = null;
 	
@@ -38,7 +39,7 @@ class users
 	 */
 	public function __construct()
 	{
-		$this->engine = engine::getInstance();
+		$this->engine = Engine::getInstance();
 	}
 	
 	/**
@@ -47,7 +48,7 @@ class users
 	 */
 	public function isLogged()
 	{
-		if(isset($_SESSION['account']['id']))
+		if(isset($_SESSION['account'], $_SESSION['account']['id']))
 			return true;
 		return false;
 	}
@@ -103,8 +104,6 @@ class users
 	public function userValidation($username, $password)
 	{
 		$hash = $this->engine->select('users', array('username' => $username), 'password')->fetch();
-		$hash = array_shift($hash);
-		
 		return password_verify($password, $hash) ? true : false;
 	}
 	
@@ -115,17 +114,19 @@ class users
 	 */
 	public function isBanned($user)
 	{
-		$this->engine->execute('SELECT count(*) FROM users WHERE (username = :username OR mail = :email)', array('username' => $user, 'email' => $user)); 
+		$this->engine->execute('SELECT * FROM users WHERE (username = :username OR mail = :email)', array('username' => $user, 'email' => $user)); 
 		return ($this->engine->countRows() > 0) ? true : false;
 	}
 	
 	/**
 	 * Register an account
+	 * @param bool $redirect
+	 * @param bool $authenticate
 	 */
-	public function register()
+	public function register($redirect = true, $authenticate = true)
 	{
-		$template = template::getInstance();
-		$core     = core::getInstance();
+		$template = Template::getInstance();
+		$core     = Core::getInstance();
 		
 		$template->form->setData();
 		
@@ -143,11 +144,11 @@ class users
 				return;
 			}
 			
-			if(!$this->validEmail($template->form->input('reg_email')))
-			{
-				$template->form->error('The email is not valid.');
-				return;
-			}
+			//if(!$this->validEmail($template->form->input('reg_email')))
+			//{
+			//	$template->form->error('The email is not valid.');
+			//	return;
+			//}
 			
 			if($this->emailTaken($template->form->input('reg_email')))
 			{
@@ -167,49 +168,60 @@ class users
 				return;
 			}
 			
-			$gender = $template->form->assert('reg_gender') ? $template->form->input('reg_gender') : 'M';
+			$gender = $template->form->isset('reg_gender') ? $template->form->input('reg_gender') : 'M';
 			
-			$credits = $core->getSetting('default_credits');
-			$pixels  = $core->getSetting('default_pixels');
+			$credits = $core->cms_settings('default_credits', 5000);
+			$pixels  = $core->cms_settings('default_pixels', 10000);
+			$motto	 = $core->cms_settings('default_motto', 'I <3 RevCMS');
+			$figure	 = $core->cms_settings('default_looks', '-');
 			$ip = isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'];
+			
 			$id = $this->engine->insert('users', array(
 				// Username
-				'username' => $template->form->input('reg_username'),
+				'username'	=> $template->form->input('reg_username'),
 				// Password
-				'password' => $core->hashed($template->form->input('reg_password')),
+				'password'	=> $core::hash($template->form->input('reg_password')),
 				// Email
-				'mail' => $template->form->input('reg_email'),
+				'mail' 		=> $template->form->input('reg_email'),
 				// Motto
-				'motto' => $core->getSetting('default_motto'),
+				'motto' 	=> $motto,
 				// Rank
-				'rank' => 1,
+				'rank' 		=> 1,
 				// Figure
-				'look' => $core->getSetting('default_looks'),
+				'look' 		=> $figure,
 				// Gender
-				'gender' => $gender,
+				'gender' 	=> $gender,
 				// IP Last
-				'ip_last' => $ip,
+				'ip_last' 	=> $ip,
 				// IP Regular
-				'ip_reg' => $ip,
+				'ip_reg' 	=> $ip,
+				// Auth Ticket
 				'auth_ticket' => '',
-				'credits' => $credits,
+				// Credits
+				'credits' 	=> $credits,
+				// Pixels
 				'activity_points' => $pixels
 			));
 			
-			$this->authenticate($id);
-					
-			$core->redirect('/me');
+			if(!$id)
+				$template->form->error('Couldn\'t insert record into database');
+			
+			if($authenticate)
+				$this->authenticate($id);
+			
+			if($redirect)
+				$core->redirect('/me');
 		}
 	}
 	
 	/**
 	 * Login an account
 	 */
-	public function login()
+	public function login($redirect = true)
 	{
-		$template = template::getInstance();
-		$engine   = engine::getInstance();
-		$core 	  = core::getInstance();
+		$template = Template::getInstance();
+		$engine   = Engine::getInstance();
+		$core 	  = Core::getInstance();
 		
 		$template->form->setData();
 		
@@ -231,7 +243,8 @@ class users
 			$ip = isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'];
 			$this->updateUser($_SESSION['account']['id'], 'ip_last', $ip);
 			
-			$core->redirect('/me');
+			if($redirect)
+				$core->redirect('/me');
 		}
 	}
 	
@@ -242,27 +255,34 @@ class users
 	 */
 	public function isStaffMember($user)
 	{
-		$this->engine->execute('SELECT count(*) FROM users WHERE (username = :uname OR mail = :umail) AND rank > 2', array('uname' => $user, 'umail' => $user));
-		return ($this->engine->countRows() > 0) ? true : false;
+		if(is_null($user))
+			return false;
+		
+		$result = $this->engine->query('SELECT rank FROM users WHERE (username = :uname OR mail = :umail) LIMIT 1', array('uname' => $user, 'umail' => $user));
+		
+		if(!$result)
+			return false;
+		
+		return ($result[0]['rank'] > 2) ? true : false;
 	}
 
 	/**
-	 * Authenticate an user by username
+	 * Authenticate an user by id
 	 * @param string $id
 	 */
 	public function authenticate($id)
 	{
-		$data = $this->engine->select('users', array('id' => $id), '*', array(), 1)->fetch();
+		$data = $this->engine->select('users', array('id' => $id))->fetchAll();
+		$data = $data[0];
 		unset($data['password']);
+		
+		$data['auth_ticket'] = $ticket = password_hash(sprintf('RevTicket-%d-%s', $data['id'], session_id()), PASSWORD_BCRYPT, array('cost' => 12));
 		
 		$_SESSION['account'] = array();
 		foreach($data as $key => $value)
-		{
 			$_SESSION['account'][$key] = $value;
-		}
 		
-		$data['auth_ticket'] = sprintf('REV-%d-%d', sha1($data['id']), session_id());
-		$this->updateUser($data['id'], 'auth_ticket', $data['auth_ticket']);
+		$this->updateUser($data['id'], 'auth_ticket', $ticket);
 	}
 	
 	/**
@@ -270,8 +290,8 @@ class users
 	 */
 	public function updateAccount()
 	{
-		$template = template::getInstance();
-		$core     = core::getInstance();
+		$template = Template::getInstance();
+		$core     = Core::getInstance();
 		
 		$template->form->setData();
 		
@@ -282,7 +302,7 @@ class users
 			/**
 			 * Update Account Motto
 			 */
-			if($template->form->asset('acc_motto') && $template->form->input('acc_motto') != $this->getInfo($_SESSION['account']['id'], 'motto'))
+			if($template->form->isset('acc_motto') && $template->form->input('acc_motto') != $this->getInfo($_SESSION['account']['id'], 'motto'))
 			{
 				$this->updateUser($_SESSION['account']['id'], 'motto', $template->form->input('acc_motto'));
 				$updated = true;
@@ -291,7 +311,7 @@ class users
 			/**
 			 * Update Account Email 
 			 */
-			if($template->form->asset('acc_email') && $template->form->input('acc_email') != $this->getInfo($_SESSION['account']['id'], 'mail'))
+			if($template->form->isset('acc_email') && $template->form->input('acc_email') != $this->getInfo($_SESSION['account']['id'], 'mail'))
 			{
 				if($this->validEmail($template->form->input('acc_email')))
 				{
@@ -308,7 +328,7 @@ class users
 			 *
 			 * The only way i can tell if password has changed from there previous password is try to validate it with the hash, it should fail.
 			 */
-			if($template->form->asset('acc_old_password') && $template->form->asset('acc_new_password') && !$this->userValidation($_SESSION['account']['username'], $template->form->input('acc_new_password')))
+			if($template->form->isset('acc_old_password') && $template->form->isset('acc_new_password') && !$this->userValidation($_SESSION['account']['username'], $template->form->input('acc_new_password')))
 			{
 				if($template->form->input('acc_new_password') !== $template->form->input('acc_new_rep_password'))
 				{
@@ -322,7 +342,7 @@ class users
 					return;
 				}
 				
-				$this->updateUser($_SESSION['account']['id'], 'password', $core->hashed($template->form->input('acc_new_password')));
+				$this->updateUser($_SESSION['account']['id'], 'password', $core::hash($template->form->input('acc_new_password')));
 				$updated = true;
 			}
 			
@@ -379,12 +399,17 @@ class users
 	}
 	
 	/**
-	 * Get username by id
-	 * @param int id
+	 * Get username by id or email
+	 * @param int id|string
 	 * @return string 
 	 */
 	public function getUsername($id)
 	{
-		return $this->engine->select('users', array('id' => $id), 'username', array(), 1)->fetch();
+		if(is_int($id))
+			$result = $this->engine->select('users', array('id' => $id), 'username', array(), 1)->fetch();
+		else
+			$this->engine->select('users', array('mail' => $id), 'username', array(), 1)->fetch();
+		
+		return $result;
 	}
 }

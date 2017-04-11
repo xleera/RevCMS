@@ -4,20 +4,19 @@
  *
  * @author	Kryptos
  * @author	GarettM
- * @version	0.8.1
+ * @version	0.0.1
  */
  
-namespace Revolution\app\tpl;
-use Revolution\app\core;
+namespace Revolution\App\Tpl;
+use Revolution\App\System\Core;
 
-class html
+class Html
 {
 	protected $content;
 	
 	public function get($fileName)
 	{
-		$core = core::getInstance();
-		$file = sprintf('%s/skins/%s/%s.php', dirname(__FILE__), $core->getHotelTheme(), $fileName);
+		$file = sprintf('%s/skins/%s/%s.php', dirname(__FILE__), Core::getHotelTheme(), $fileName);
 		
 		if(file_exists($file))
 		{
@@ -28,8 +27,7 @@ class html
 		}
 		else {
 			$_SESSION['last_uri'] = $fileName;
-			echo 'File ' . $file . ' does not exist.';
-			//$this->get('404');
+			$this->get('404');
 		}
 	}
 	

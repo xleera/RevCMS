@@ -24,10 +24,16 @@ input, .input
 	margin-top: 3px;
 }
 
-.clear
-{
-	clear: both;
+.clear:after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: " ";
+  clear: both;
+  height: 0;
 }
+.clear { display: inline-block; }
+.clear { display: block; }
 
 .round
 {
@@ -74,8 +80,16 @@ input, .input
 	margin-left: 5px !important;
 }
 
+.wrapper {
+	display: flex;
+}
+.wrapper-column {
+	display: flex;
+	flex-direction: column;
+}
 .content
 {
+	display: block;
 	position: relative;
 		
 	margin-top: 7px !important;
@@ -96,6 +110,11 @@ input, .input
 {
 	margin-bottom: 18px;
 }
+.head:after {
+	display: block;
+	content: " ";
+	height: 1px;
+}
 	
 .head .online
 {
@@ -114,7 +133,7 @@ input, .input
 
 .content .left, .content .right
 {
-	float: left;
+	flex: 1;
 		
 	background-color: #999999;
 		
@@ -220,9 +239,19 @@ input, .input
 
 .content .login, .content .register
 {
+	flex: 1;
 	font-weight: bold;
 	margin-right: 5px;
 	margin-left: 5px;
+}
+
+.content .register img {
+	display: block;
+	margin: 0 auto;
+}
+
+.content .register img, .content .register p {
+	flex: 1;
 }
 
 .login p input
@@ -231,8 +260,27 @@ input, .input
 }
 
 .content .register
-{		
+{
+	display: flex;
 	text-align: center;
+}
+
+.content .register:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.content .register .genders
+{
+	margin: 0 auto;
+	width: 70px;
+	display: flex;
+}
+
+.content .register .genders .gender
+{
+	flex: 1;
 }
 
 .content .small
@@ -242,7 +290,18 @@ input, .input
 
 .content .register .small
 {
+	padding: 0 5px;
 	width: 140px;
+	flex: 1;
+}
+
+.content .register .small .help {
+	font-weight: 400 !important;
+}
+
+.content .register .small input
+{
+	max-width: 140px;
 }
 
 .content .login .title
@@ -265,6 +324,10 @@ input, .input
 	padding-left: 0px !important;
 	
 	font-size: 11px;
+}
+
+.content .login input[type=submit] {
+	margin: 0 auto;
 }
 
 .content .register a
@@ -335,6 +398,33 @@ input, .input
 {
 	float: right;
 	padding-right: 22px;
+}
+
+.menu .ase-portal
+{
+	position: fixed;
+	top: 2px;
+	right: 45px;
+	
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0px;
+	font-family: Courier New;
+	color: #ffffff;
+	font-size: 20px;
+	background: #ff5f4a;
+	padding: 10px 20px 10px 20px;
+	text-decoration: none;
+}
+
+
+.menu .ase-portal:hover {
+	background: #bd4520;
+	text-decoration: none;
+}
+
+.menu .ase-portal a, .menu .ase-portal a:hover {
+	font-weight: 400 !important;
 }
 
 .user_info

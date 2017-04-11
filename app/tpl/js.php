@@ -4,13 +4,13 @@
  *
  * @author	Kryptos
  * @author	GarettM
- * @version	0.8.1
+ * @version	0.0.1
  */
  
-namespace Revolution\app\tpl;
-use Revolution\app\core;
+namespace Revolution\App\Tpl;
+use Revolution\App\System\Core;
 
-class js
+class Js
 {
 	/**
 	 * @var string[]
@@ -19,8 +19,6 @@ class js
 	
 	public function all()
 	{
-		$core = core::getInstance();
-		
 		$content = '';
 		foreach($this->scripts as $script)
 		{
@@ -28,7 +26,7 @@ class js
 			{
 				$content .= sprintf('<script src="%s"></script>', $script['src']);
 			} else {
-				$content .= sprintf('<script src="%s/app/tpl/skins/%s/js/%s"></script>', $core->getHotelUrl(), $core->getHotelTheme(), $script['src']);
+				$content .= sprintf('<script src="%s/app/tpl/skins/%s/js/%s"></script>', Core::getHotelUrl(), Core::getHotelTheme(), $script['src']);
 			}
 			$content .= PHP_EOL;
 		}

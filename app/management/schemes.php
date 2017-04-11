@@ -20,7 +20,7 @@ return array(
 	"INSERT INTO `cms_settings` (`setting_key`, `setting_value`, `setting_default`) VALUES ('hotel_external_vars', 'hotel_swf_folder}/variables.txt', '{hotel_swf_folder}/variables.txt');",
 	"INSERT INTO `cms_settings` (`setting_key`, `setting_value`, `setting_default`) VALUES ('hotel_external_texts', '{hotel_swf_folder}/texts.txt', '{hotel_swf_folder}/texts.txt');",
 	"INSERT INTO `cms_settings` (`setting_key`, `setting_value`, `setting_default`) VALUES ('hotel_swf_folder', 'gordon/', 'gordon/{hotel_build}/');",
-	"INSERT INTO `cms_settings` (`setting_key`, `setting_value`, `setting_default`) VALUES ('hotel_maitence', 'false', 'false');",
+	"INSERT INTO `cms_settings` (`setting_key`, `setting_value`, `setting_default`) VALUES ('hotel_maintenance', 'false', 'false');",
 	"INSERT INTO `cms_settings` (`setting_key`, `setting_value`, `setting_default`) VALUES ('hotel_swf_folder', 'gordon/', 'gordon/{hotel_build}/');",
 	"INSERT INTO `cms_settings` (`setting_key`, `setting_value`, `setting_default`) VALUES ('hotel_maitence', 'false', 'false');",
 	"INSERT INTO `cms_settings` (`setting_key`, `setting_value`, `setting_default`) VALUES ('default_motto', 'I <3 Hybrid', 'I <3 Hybrid');",

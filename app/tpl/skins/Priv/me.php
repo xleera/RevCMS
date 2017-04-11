@@ -18,12 +18,13 @@
 			</div>	
 			<div class="menu round">
 				<ul>
-					<li><a href="me">Me</a></li>
-					<li><a href="help">Help</a></li>
-					<li><a href="credits">Credits</a></li>
+					<li><a href="{url}/me">Me</a></li>
+					<li><a href="{url}/account">Account</a></li>
+					<li><a href="{url}/news">News</a></li>
+					<li><a href="{url}/help">Help</a></li>
 					
 					<li class="signout"><a href="logout">Logout</a></li>
-					<li class="signout"><a href="ase/">Housekeeping</a></li>
+					{housekeeping}
 				</ul>
 			</div>
 

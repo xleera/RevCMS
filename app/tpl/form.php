@@ -4,19 +4,17 @@
  *
  * @author	Kryptos
  * @author	GarettM
- * @version	0.8.1
+ * @version	0.0.1
  */
  
-namespace Revolution\app\tpl;
-use Revolution\app\core;
-use Revolution\app\engine;
+namespace Revolution\App\Tpl;
 
-class form
+class Form
 {
 	/**
 	 * @var string
 	 */
-	protected $error;
+	protected $error = false;
 	
 	/**
 	 * @var array
@@ -28,14 +26,10 @@ class form
 	 */
 	public function setData()
 	{
-		$engine = engine::getInstance();
-		$core   = core::getInstance();
+		$this->error = false;
 		
-		unset($this->error);
-		foreach($_POST as $key => $value)
-		{
-			$this->data[$key] = $core->secure($value) ?: null;
-		}
+		$this->data = array_merge($_GET, $_POST);
+		$this->data = array_map('Revolution\App\System\Core::secure', $this->data);
 	}
 	
 	/**
@@ -43,7 +37,7 @@ class form
 	 * @param string $key 
 	 * @return bool
 	 */
-	public function assert($key)
+	public function isset($key)
 	{
 		if(array_key_exists($key, $this->data) && !is_null($this->data[$key]))
 			return true;
@@ -57,7 +51,7 @@ class form
 	 */
 	public function input($key)
 	{
-		if($this->assert($key))
+		if($this->isset($key))
 			return $this->data[$key];
 		
 		return null;
@@ -78,7 +72,16 @@ class form
 	 */
 	public function isError()
 	{
-		return isset($this->error) ? true : false;
+		return is_string($this->error) && strlen($this->error) > 0 ? true : false;
+	}
+	
+	/**
+	 * Get error message
+	 * @return string
+	 */
+	public function getError()
+	{
+		return $this->error;
 	}
 	
 	/**

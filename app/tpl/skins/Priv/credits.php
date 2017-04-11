@@ -6,7 +6,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<base href="{url}"/>
 
-		<title>{hotelName} - Me</title>
+		<title>{hotelName} - Credits</title>
 		<link rel="stylesheet" type="text/css" href="{url}/app/tpl/skins/Priv/styles/global.css" />
 		<meta name="description" content="{hotelDesc}"/>
 	</head>
@@ -23,7 +23,7 @@
 					<li><a href="credits">Credits</a></li>
 					
 					<li class="signout"><a href="logout">Logout</a></li>
-					<li class="signout"><a href="ase/">Housekeeping</a></li>
+					{housekeeping}
 				</ul>
 			</div>
 			<div class="habblet-container ">		

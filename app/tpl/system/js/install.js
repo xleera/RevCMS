@@ -1,232 +1,251 @@
 /**
- * RevolutionCMS Installation 
+ * RevolutionCMS Installation Script
  */
- 
-/**
- * fieldsets
- */
-var current_fs, next_fs, previous_fs;
-var left, opacity, scale;
-var animating; 
 
-/**
- * Requirements
- */
-$(".reg_next").click(function(){
-	if(animating) return false;
-	animating = true;
+$(function() {
+	var install_current_step, install_next_step, install_previous_step;
+	var left, opacity, scale;
+	var animating;
 	
-	current_fs = $(this).parent();
-	next_fs = $(this).parent().next();
+    console.log("RevolutionCMS Installation Processes");
 	
-	//activate next step on progressbar using the index of next_fs
-	$("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
-	
-	//show the next fieldset
-	next_fs.show(); 
-	//hide the current fieldset with style
-	current_fs.animate({opacity: 0}, {
-		step: function(now, mx) {
-			//as the opacity of current_fs reduces to 0 - stored in "now"
-			//1. scale current_fs down to 80%
-			scale = 1 - (1 - now) * 0.2;
-			//2. bring next_fs from the right(50%)
-			left = (now * 50)+"%";
-			//3. increase opacity of next_fs to 1 as it moves in
-			opacity = 1 - now;
-			current_fs.css({
-        'transform': 'scale('+scale+')',
-        'position': 'absolute'
-      });
-			next_fs.css({'left': left, 'opacity': opacity});
-		}, 
-		duration: 800, 
-		complete: function(){
-			current_fs.hide();
-			animating = false;
-		}, 
-		//this comes from the custom easing plugin
-		easing: 'easeInOutBack'
-	});
-});
-
-$(".previous").click(function(){
-	if(animating) return false;
-	animating = true;
-	
-	current_fs = $(this).parent();
-	previous_fs = $(this).parent().prev();
-	
-	//de-activate current step on progressbar
-	$("#progressbar li").eq($("fieldset").index(current_fs)).removeClass("active");
-	
-	//show the previous fieldset
-	previous_fs.show(); 
-	//hide the current fieldset with style
-	current_fs.animate({opacity: 0}, {
-		step: function(now, mx) {
-			//as the opacity of current_fs reduces to 0 - stored in "now"
-			//1. scale previous_fs from 80% to 100%
-			scale = 0.8 + (1 - now) * 0.2;
-			//2. take current_fs to the right(50%) - from 0%
-			left = ((1-now) * 50)+"%";
-			//3. increase opacity of previous_fs to 1 as it moves in
-			opacity = 1 - now;
-			current_fs.css({'left': left});
-			previous_fs.css({'transform': 'scale('+scale+')', 'opacity': opacity});
-		}, 
-		duration: 800, 
-		complete: function(){
-			current_fs.hide();
-			animating = false;
-		}, 
-		//this comes from the custom easing plugin
-		easing: 'easeInOutBack'
-	});
-});
-
-/**
- * Database
- */
-$(".db_next").click(function(){
-	if(animating) return false;
-	animating = true;
-	
-	current_fs = $(this).parent();
-	next_fs = $(this).parent().next();
-	
-	console.log('Step: Database');
-	
-	var test_hostname = $("input[name=db_hostname]").val();
-	var test_username = $("input[name=db_username]").val();
-	var test_password = $("input[name=db_password]").val();
-	var test_database = $("input[name=db_database]").val();
-	$.post("install.php", { action: 'db_test', db_hostname: test_hostname, db_username: test_username, db_password: test_password, db_database: test_database }, function(data) {
-		// log response before parsing it for debugging
-		console.log(data);
+	/**
+	 * Do Requirement Check
+	 */
+	$.post('do.php', { action: 'installer_requirements' }, function (data) {
+		data = $.parseJSON(data);
 		
-		data = $.parseJSON( data );
-		if(data.success) {
-			$(".db_next").removeClass('disabled');
-			// continue with moving fieldsets 
-			$("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
-				
-				//show the next fieldset
-				next_fs.show(); 
-				//hide the current fieldset with style
-				current_fs.animate({opacity: 0}, {
-					step: function(now, mx) {
-						//as the opacity of current_fs reduces to 0 - stored in "now"
-						//1. scale current_fs down to 80%
-						scale = 1 - (1 - now) * 0.2;
-						//2. bring next_fs from the right(50%)
-						left = (now * 50)+"%";
-						//3. increase opacity of next_fs to 1 as it moves in
-						opacity = 1 - now;
-						current_fs.css({
-					'transform': 'scale('+scale+')',
+		if(data.success == true)
+		{
+			console.log("Checking System Requirements...  PASSED");
+			$('.requirement-subtitle').html(data.content);
+			$('.requirement_next').removeClass('disabled');
+			$('.requirement_next').prop("disabled", false);
+		}
+		else {
+			console.log("Checking System Requirements...  FAILED");
+			if(Array.isArray(data.content))
+			{
+				$.each(data.content, function (id, error) {
+					console.log("Installation Error: " + error);
+					$('.requirements-response').append('<div class="alert">' + error + '</div>');
+				});
+			}
+			else {
+				$('.requirements-response').html(data.content);
+			}
+		}
+	});
+	
+	/**
+	 * Requirements
+	 */
+	$('.requirement_next').click(function () {
+		if(animating) return false;
+		animating = true;
+		
+		install_current_step = $(this).parent();
+		install_next_step = $(this).parent().next();
+		
+		// activate next step on progressbar using index of install_next_step
+		$('#progressbar li').eq($('fieldset').index(install_next_step)).addClass('active');
+		
+		install_next_step.show();
+		install_current_step.animate({opacity: 0}, {
+			step: function(now, mx) {
+				scale = 1 - (1 - now) * 0.2;
+				left  = (now * 50)+"%";
+				opacity = 1 - now;
+				install_current_step.css({
+					'transform': 'scale(' + scale + ')',
 					'position': 'absolute'
-				  });
-						next_fs.css({'left': left, 'opacity': opacity});
-					}, 
-					duration: 800, 
-					complete: function(){
-						current_fs.hide();
+				});
+				install_next_step.css({'left': left, 'opacity': opacity});
+			},
+			duration: 800,
+			complete: function() {
+				install_current_step.hide();
+				animating = false;
+			},
+			easing: 'easeInOutBack'
+		});
+	});
+	
+	/**
+	 * Database
+	 */
+	$('.db_next').click(function () {
+		if(animating) return false;
+		animating = true;
+		
+		install_current_step = $(this).parent();
+		install_next_step = $(this).parent().next();
+		
+		var db_hostname = $("input[name=db_hostname]").val();
+		var db_username = $("input[name=db_username]").val();
+		var db_password = $("input[name=db_password]").val();
+		var db_database = $("input[name=db_database]").val();
+		$.post('do.php', { action: 'installer_database', hostname: db_hostname, username: db_username, password: db_password, database: db_database }, function (data) {
+			data = $.parseJSON(data);
+		
+			if(data.success == true)
+			{
+				console.log("Testing Database and Creating Config File... PASSED");
+				$('.db-subtitle').html(data.content);
+				
+				// activate next step on progressbar using index of install_next_step
+				$('#progressbar li').eq($('fieldset').index(install_next_step)).addClass('active');
+				
+				install_next_step.show();
+				install_current_step.animate({opacity: 0}, {
+					step: function(now, mx) {
+						scale = 1 - (1 - now) * 0.2;
+						left  = (now * 50)+"%";
+						opacity = 1 - now;
+						install_current_step.css({
+							'transform': 'scale(' + scale + ')',
+							'position': 'absolute'
+						});
+						install_next_step.css({'left': left, 'opacity': opacity});
+					},
+					duration: 800,
+					complete: function() {
+						install_current_step.hide();
 						animating = false;
-					}, 
-					//this comes from the custom easing plugin
+					},
 					easing: 'easeInOutBack'
 				});
-		}
-		else {
-			console.log('Application Error: ' + JSON.stringify(data));
-			$('.db-subtitle').html(data.content);
-			animating = false;
-		}
+			}
+			else {
+				console.log("Testing Database and Creating Config File... FAILED");
+				$('.db-subtitle').html(data.content);
+				animating = false;
+			}
+		});
 	});
-});
-
-/**
- * Hotel
- */
-$(".hotel_next").click(function(){
-	if(animating) return false;
-	animating = true;
 	
-	current_fs = $(this).parent();
-	next_fs = $(this).parent().next();
-	
-	var can_continue = false;
-	
-	console.log('Step: Hotel');
-	
-	var test_url = $("input[name=hotel_url]").val();
-	var test_name = $("input[name=hotel_name]").val();
-	var test_desc = $("input[name=hotel_desc]").val();
-	var test_theme = $("input[name=hotel_theme]").val();
-	$.post("install.php", { action: 'hotel_settings', hotel_url: test_url, hotel_name: test_name, hotel_desc: test_desc, hotel_theme: test_theme }, function(data) {
-		// log response before parsing it for debugging
-		console.log(data);
+	/**
+	 * Hotel
+	 */
+	$('.hotel_next').click(function () {
+		if(animating) return false;
+		animating = true;
 		
-		data = $.parseJSON( data );
-		if(data.success) {
-			$(".db_next").removeClass('disabled');
-			// continue with moving fieldsets 
-			$("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
+		install_current_step = $(this).parent();
+		install_next_step = $(this).parent().next();
+		
+		var h_url = $("input[name=url]").val();
+		var h_name = $("input[name=name]").val();
+		var h_desc = $("input[name=desc]").val();
+		var h_theme = $("input[name=theme]").val();
+		$.post('do.php', { action: 'installer_hotel', url: h_url, name: h_name, desc: h_desc, theme: h_theme }, function (data) {
+			data = $.parseJSON(data);
+		
+			if(data.success == true)
+			{
+				console.log("Updating Hotel Configuration... PASSED");
+				$('.hotel-subtitle').html(data.content);
 				
-				//show the next fieldset
-				next_fs.show(); 
-				//hide the current fieldset with style
-				current_fs.animate({opacity: 0}, {
+				// activate next step on progressbar using index of install_next_step
+				$('#progressbar li').eq($('fieldset').index(install_next_step)).addClass('active');
+				
+				install_next_step.show();
+				install_current_step.animate({opacity: 0}, {
 					step: function(now, mx) {
-						//as the opacity of current_fs reduces to 0 - stored in "now"
-						//1. scale current_fs down to 80%
 						scale = 1 - (1 - now) * 0.2;
-						//2. bring next_fs from the right(50%)
-						left = (now * 50)+"%";
-						//3. increase opacity of next_fs to 1 as it moves in
+						left  = (now * 50)+"%";
 						opacity = 1 - now;
-						current_fs.css({
-					'transform': 'scale('+scale+')',
-					'position': 'absolute'
-				  });
-						next_fs.css({'left': left, 'opacity': opacity});
-					}, 
-					duration: 800, 
-					complete: function(){
-						current_fs.hide();
+						install_current_step.css({
+							'transform': 'scale(' + scale + ')',
+							'position': 'absolute'
+						});
+						install_next_step.css({'left': left, 'opacity': opacity});
+					},
+					duration: 800,
+					complete: function() {
+						install_current_step.hide();
 						animating = false;
-					}, 
-					//this comes from the custom easing plugin
+					},
 					easing: 'easeInOutBack'
 				});
-		}
-		else {
-			$('.hotel-subtitle').html(data.content);
-		}
+			}
+			else {
+				console.log("Updating Hotel Configuration... FAILED");
+				$('.hotel-subtitle').html(data.content);
+				animating = false;
+			}
+		});
+	});
+	
+	/**
+	 * Account
+	 */
+	$('.done').click(function () {
+		if(animating) return false;
+		animating = true;
+		
+		install_current_step = $(this).parent();
+		install_next_step = $(this).parent().next();
+		
+		var email = $("input[name=reg_email]").val();
+		var username = $("input[name=reg_username]").val();
+		var password = $("input[name=reg_password]").val();
+		var repassword = $("input[name=reg_rep_password]").val();
+		$.post('do.php', { action: 'account_add', register: true, reg_email: email, reg_username: username, reg_password: password, reg_rep_password: repassword, rank: 7 }, function (data) {
+			data = $.parseJSON(data);
+		
+			if(data.success == true)
+			{
+				console.log("Added Administrator Account");
+				
+				$.post('do.php', { action: 'settings_get', key: 'hotel_url' }, function (data)
+					{
+						data = $.parseJSON(data);
+						
+						if(data.success)
+						{
+							window.location.href = data.content + '/me';
+						}
+						else {
+							console.log('RevolutionCMS couldn\'t finish the installation');
+							return false;
+						}
+					});
+			}
+			else {
+				console.log("Adding Administrator Account Failed, Reason: " + data.content);
+				$('.fs-subtitle').html(data.content);
+				animating = false;
+			}
+		});
+		
+		return false;
+	});
+	
+	$(".previous").click(function(){
+		if(animating) return false;
+		animating = true;
+		
+		install_current_step  = $(this).parent();
+		install_previous_step = $(this).parent().prev();
+		
+		$("#progressbar li").eq($("fieldset").index(install_current_step)).removeClass("active");
+		
+		install_previous_step.show();
+		install_current_step.animate({opacity: 0}, {
+			step: function(now, mx) {
+				scale = 0.8 + (1 - now) * 0.2;
+				left = ((1-now) * 50)+"%";
+				opacity = 1 - now;
+				install_current_step.css({'left': left});
+				install_previous_step.css({'transform': 'scale('+scale+')', 'opacity': opacity});
+			}, 
+			duration: 800, 
+			complete: function(){
+				install_current_step.hide();
+				animating = false;
+			},
+			easing: 'easeInOutBack'
+		});
 	});
 });
-
-$(".submit").click(function(){
-	console.log('Account Next Clicked');
-
-	var acc_email		= $("input[name=acc_email]").val();
-	var acc_username 	= $("input[name=acc_username]").val();
-	var acc_password	= $("input[name=acc_password]").val();
-	var acc_rpassword	= $("input[name=acc_rep_password]").val();
-	
-	$.post("install.php", { action: 'new_character', acc_email: acc_email, acc_username: acc_username, acc_password: acc_password, acc_rep_password: acc_rpassword }, function(data) {
-		// log response before parsing it for debugging
-		console.log(data);
-		
-		data = $.parseJSON( data );
-		if(data.success) {
-			window.location.href = '/index';
-		}
-		else {
-			$('.hotel-subtitle').html(data.content);
-		}
-	});
-	
-	return false;
-})

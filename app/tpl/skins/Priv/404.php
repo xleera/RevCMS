@@ -6,7 +6,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<base href="{url}"/>
 
-		<title>{hotelName} - Help</title>
+		<title>{hotelName} - 404</title>
 		<link rel="stylesheet" type="text/css" href="{url}/app/tpl/skins/Priv/styles/global.css" />
 		<meta name="description" content="{hotelDesc}"/>
 	</head>
@@ -37,13 +37,8 @@
 			<div class="left page round">
 				<img src="app/tpl/skins/Priv/images/frank_help.gif" alt="Can I help!?" style="float: right" />
 					
-				<h3>Help</h3>
-				<p>If you want that we help you. Please fill the box below your question. We will answer that within 5 work days.</p>
-					
-				<form action="help" method="post">
-					<textarea name="question" rows="4" cols="30"></textarea>
-					<input type="submit" name="help" value="Send question" class="button round" />
-				</form>
+				<h3>404</h3>
+				<p>The request: {last_uri} doesn't exist :(</p>
 			</div>
 				
 			<div class="clear"></div>

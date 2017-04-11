@@ -22,25 +22,30 @@
 				if($template->form->isError())
 					$template->form->outputError();
 			?>
-				
-			<div class="left login small round">
-				<p class="title">Login to {HotelName}</p>
-					
-				<form action="index" method="post">
-					<p><label for="username">Username:</label><br />
-					<input type="text" name="log_username" id="username"/></p>
-
-					<p><label for="password">Password:</label><br />
-					<input type="password" name="log_password" id="password"/></p>
+			<br />
+			<div class="clear"></div>
+			<div class="wrapper">
+				<div class="left login small round">
+					<p class="title">Login to {HotelName}</p>
 						
-					<input type="submit" name="login" class="button round" value="Sign in!" />
-				</form>
-			</div>
-				
-			<div class="right register green small round">
-				New here?
-				<p><img src="app/tpl/skins/Priv/images/smallhotel.png" alt="hotel" /></p>
-				<a href="register">REGISTER FOR FREE!</a>
+					<form action="index" method="post" autocomplete="off" >
+						<p><label for="username">Username:</label><br />
+						<input type="text" name="log_username" id="username"/></p>
+
+						<p><label for="password">Password:</label><br />
+						<input type="password" name="log_password" id="password"/></p>
+							
+						<input type="submit" name="login" class="button round" value="Sign in!" />
+					</form>
+				</div>
+					
+				<div class="right register green small round">
+					<div class="wrapper-column">
+					<p>New here?</p>
+					<img src="app/tpl/skins/Priv/images/smallhotel.png" alt="hotel" />
+					<p><a href="register">REGISTER FOR FREE!</a></p>
+					</div>
+				</div>
 			</div>
 				
 			<div class="clear"></div>
