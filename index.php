@@ -29,7 +29,7 @@ if(!session_id())
  */
 if(!Rev\App\System\Core::configExist())
 {
-	$request = isset($_GET['url'][0]) ? Rev\App\System\Core::secure($_GET['url']) : 'index';
+	$request = isset($_GET['url'][0]) ? Rev\App\System\Core::secure($_GET['url']) : '/index';
 	header(sprintf('Location: %s/install.php', str_ireplace($request, '', "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]")));
 	exit;
 }

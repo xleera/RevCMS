@@ -103,7 +103,7 @@ class Template
 			
 			if($users->isStaffMember($_SESSION['account']['username']))
 			{
-				$this->setParams('housekeeping', '<li><a href="' . $this->params['url'] . '/ase/index.php" class="ase-portal">Housekeeping</a></li>');
+				$this->setParams('housekeeping', '<li><a href="' . $this->params['url'] . '/ase" class="ase-portal">Housekeeping</a></li>');
 			}
 		}
 		
