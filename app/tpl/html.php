@@ -14,6 +14,10 @@ class Html
 {
 	protected $content;
 	
+	/**
+	 * Get html/php content
+	 * @param string $fileName
+	 */
 	public function get($fileName)
 	{
 		$file = sprintf('%s/skins/%s/%s.php', dirname(__FILE__), Core::getHotelTheme(), $fileName);

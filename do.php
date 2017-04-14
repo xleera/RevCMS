@@ -243,7 +243,11 @@ try {
 			/**
 			 * Hotel
 			 */
-			case 'online_count':
+			case 'online':
+				$core = Revolution\App\System\Core::getInstance();
+				
+				$response['content'] = $core::getOnline();
+				$response['success'] = true;
 				break;
 			case 'settings_set':
 				break;

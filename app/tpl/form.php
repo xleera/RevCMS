@@ -29,7 +29,7 @@ class Form
 		$this->error = false;
 		
 		$this->data = array_merge($_GET, $_POST);
-		$this->data = array_map('Revolution\App\System\Core::secure', $this->data);
+		$this->data = array_map('\Revolution\App\System\Core::secure', $this->data);
 	}
 	
 	/**

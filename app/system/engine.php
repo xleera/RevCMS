@@ -110,7 +110,7 @@ class Engine
 	 * Execute and fetch results from database
 	 * @param string $query
 	 * @param array $params
-	 * @return mixed
+	 * @return array|bool
 	 */
 	public function query($query, array $params = array())
 	{
@@ -120,9 +120,11 @@ class Engine
 		foreach ((array)$params as $key => $value)	
 			$this->statement->bindValue($this->toParamKey($key), $value);
 		
-		$this->statement->execute();
-		return $this->statement->fetchAll(PDO::FETCH_ASSOC);
-	} 
+		if($this->statement->execute())
+			return $this->statement->fetchAll(PDO::FETCH_ASSOC);
+		
+		return false;
+	}
 	
 	/**
 	 * Execute a query on the database

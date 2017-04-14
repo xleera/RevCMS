@@ -80,11 +80,17 @@ class Template
 		$this->setParams('hotelDesc',		$core::getHotelDesc());
 		$this->setParams('url', 			$core::getHotelUrl());
 		$this->setParams('online', 			$core::getOnline());
-		$this->setParams('web_build',		$core::getHotelWebBuild());
-		$this->setParams('external_vars',	$core::getHotelExternalVar());
-		$this->setParams('external_texts',	$core::getHotelExternalTxt());
-		$this->setParams('swf_folder',		$core::getHotelSwfFolder());
-		$this->setParams('last_uri',		isset($_SESSION['last_uri']) ? $core::secure($_SESSION['last_uri']) : '');
+		
+		$this->setParams('server.address',			$core::getServerAddress());
+		$this->setParams('server.port',				$core::getServerPort());
+		$this->setParams('client.build',			$core::getHotelWebBuild());
+		$this->setParams('client.external_vars',	$core::getHotelExternalVar());
+		$this->setParams('client.external_texts',	$core::getHotelExternalTxt());
+		$this->setParams('client.swf_folder',		$core::getHotelSwfFolder());
+		
+		$this->setParams('last_uri',		isset($_GET['url']) ? $core::secure($_GET['url']) : '');
+		
+		$this->setParams('users.registered', $core::getRegisteredCount());
 		
 		if(defined('REV_DEVELOPMENT'))
 			$this->setParams('rand', sha1(rand(2, 888)));
@@ -108,26 +114,30 @@ class Template
 		}
 		
 		$request = isset($_GET['url']) ? $core::secure($_GET['url']) : 'index';
-		if(in_array($request, array('me', 'account', 'home', 'settings')))
+		if(in_array($request, array('article', 'news')))
 		{
-			$options = array('options' => array('default' => '1'));
-			$id = filter_var(@$_GET['id'], FILTER_VALIDATE_INT, $options);
+			$default = $engine->select('cms_news', array(), array('*'), array('id' => 'DESC'), 1)->fetch();
+			$id = isset($_GET['article']) ? intval($_GET['article']) : $default;
 		
 			$articles = $engine->query('SELECT title, id FROM cms_news WHERE id != :id LIMIT 10', array('id' => $id));
 			foreach($articles as $article)
-				$this->setParams('newsList', sprintf('<a href="%s/index.php?url=news&id=%d">%s</a><br />', $core::getHotelUrl(), $article['id']. $article['title']));
+				$this->setParams('newsList', sprintf('<a href="%s/article/%d">%s</a><br />', $core::getHotelUrl(), $article['id'], $article['title']));
 			
-			$current = $engine->select('cms_news', array('id' => $id), '*', array(), 1)->fetch();
-			$this->setParams('newsTitle', 	$current['title']);
-			$this->setParams('newsContent', $current['longstory']);
-			$this->setParams('newsAuthor', 	is_int($current['author']) ? $users->getUsername($current['author']) : $current['author']);
-			$this->setParams('newsDate', 	$current['published']);
+			$current = $engine->select('cms_news', array('id' => $id))->fetchAll();
+			$current = array_shift($current);
+			
+			$this->setParams('article.title',		$current['title']);
+			$this->setParams('article.content', 	$current['longstory']);
+			$this->setParams('article.author.id',	!is_numeric($current['author']) ? $users->getId($current['author']) : $current['author']);
+			$this->setParams('article.author.name', $users->getInfo($this->params['article.author.id'], 'username'));
+			$this->setParams('article.author.look', $users->getInfo($this->params['article.author.id'], 'look'));
+			$this->setParams('article.published', 	date("d/m/Y", $current['published']));
 		}
 		
-		if(in_array($request, array('news', 'articles')))
+		if(in_array($request, array('me', 'account', 'home', 'settings')))
 		{
 			$i = 0;
-			$articles = $engine->select('cms_news', array(), '*', array('id' => 'DESC'), 5)->fetch();
+			$articles = $engine->select('cms_news', array(), array('*'), array('id' => 'DESC'), 5)->fetchAll();
 			
 			if(isset($articles[0]))
 			{

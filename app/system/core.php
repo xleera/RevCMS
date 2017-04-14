@@ -98,7 +98,7 @@ class Core
 			$content = str_ireplace("{{$key}}", $value, $content);
 		
 		echo $content;
-		exit;
+		exit();
 	}
 	
 	/**
@@ -154,6 +154,26 @@ class Core
 	}
 	
 	/**
+	 * Get the hotel emulator address
+	 * @return string
+	 */
+	public static function getServerAddress()
+	{
+		$core = self::getInstance();
+		return $core->cms_settings('hotel_server_addr');
+	}
+	
+	/**
+	 * Get the hotel emulator port
+	 * @return int
+	 */
+	public static function getServerPort()
+	{
+		$core = self::getInstance();
+		return $core->cms_settings('hotel_server_port');
+	}
+	
+	/**
 	 * Get the hotel web build
 	 * @return string
 	 */
@@ -191,6 +211,16 @@ class Core
 	{
 		$core = self::getInstance();
 		return $core->cms_settings('hotel_swf_folder');
+	}
+	
+	/**
+	 * Get the ammount of users registered
+	 * @return int
+	 */
+	public static function getRegisteredCount()
+	{
+		$engine = engine::getInstance();
+		$result = $engine->query('SELECT count(*) FROM users');
 	}
 	
 	/**

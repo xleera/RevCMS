@@ -145,6 +145,172 @@ $action		= isset($input['action'][0]) ? $input['action'] : 'dashboard';
 			endif;
 			/**
 			 * TODO: Move to partial use jQuery or Angular.
+			 * RevolutionCMS ASE Dashboard
+			 */
+			if($action == 'dashboard'):
+			?>
+			<div id="page-wrapper">
+				<div class="container-fluid">
+					<!-- Page Heading -->
+					<div class="row">
+						<div class="col-lg-12">
+							<h1 class="page-header">Dashboard</h1>
+							<ol class="breadcrumb">
+								<li class="active"><i class="fa fa-dashboard"></i> Dashboard</li>
+							</ol>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-12">
+							<div class="alert alert-info alert-dismissable">
+								<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+								<i class="fa fa-info-circle"></i>  <strong>Enjoy RevCMS?</strong> Consider <a href="http://paypal.me/GarettMcCarty" class="alert-link">donating</a> for additional features!
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<div class="table-responsive">
+								<table class="table table-bordered table-hover table-striped">
+									<thead>
+										<tr>
+											<th>Uptime</th>
+											<th>Online</th>
+											<th>Registered</th>
+											<th>Registered Today</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>0</td>
+											<td>0</td>
+											<td>0</td>
+											<td>0</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+                        </div>
+					</div>
+					<div class="row">
+						<div class="col-lg-9 col-md-12">
+						<!-- CHATLOG -->
+						<div class="row">
+							<div class="col-md-3">
+								 <div class="row chats-row">
+									<div class="col-md-12">
+										<a href="#" class="list-group-item">Welcome Lounge</a>
+										<a href="#" class="list-group-item">Theater</a>
+										<a href="#" class="list-group-item active">Picnic</a>
+										<a href="#" class="list-group-item">Coffee House</a>
+									</div>
+								 </div>
+							</div>
+							<div class="col-md-9 current-chat">
+								<div class="row current-chat-area">
+									<div class="col-md-12">
+										  <ul class="media-list">
+											<li class="media">
+												<div class="media-body">
+													<div class="media">
+														<a class="pull-left" href="#">
+															<img class="media-object img-circle" src="http://www.habbo.nl/habbo-imaging/avatarimage?figure=-&head_direction=3&gesture=sml&headonly=1" style="margin-top: -10px;">
+														</a>
+														<div class="media-body">
+															Donec sit amet ligula enim. Duis vel condimentum massa.
+															<br>
+															<small class="text-muted">GarettM | 23rd June at 5:00pm</small>
+															<hr>
+														</div>
+													</div>
+												</div>
+											</li>
+											<li class="media">
+												<div class="media-body">
+													<div class="media">
+														<a class="pull-left" href="#">
+															<img class="media-object img-circle" src="http://www.habbo.nl/habbo-imaging/avatarimage?figure=-&head_direction=3&gesture=sml&headonly=1" style="margin-top: -15px;">
+														</a>
+														<div class="media-body">
+															Donec sit amet ligula enim. Duis vel condimentum massa.
+															<br>
+														   <small class="text-muted">District | 23rd June at 5:01pm</small>
+															<hr>
+														</div>
+													</div>
+												</div>
+											</li>
+											<li class="media">
+												<div class="media-body">
+													<div class="media">
+														<a class="pull-left" href="#">
+															<img class="media-object img-circle" src="http://www.habbo.nl/habbo-imaging/avatarimage?figure=-&head_direction=3&gesture=sml&headonly=1" style="margin-top: -15px;">
+														</a>
+														<div class="media-body">
+															Donec sit amet ligula enim. Duis vel condimentum massa.
+															<br>
+														   <small class="text-muted">District | 23rd June at 5:01pm</small>
+															<hr>
+														</div>
+													</div>
+												</div>
+											</li>
+										</ul>  
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- CHATLOG -->
+						</div>
+						<div class="col-lg-3 col-md-6">
+							<div class="panel panel-primary">
+								<div class="panel-heading">
+									<div class="row">
+										<div class="col-xs-3">
+											<i class="fa fa-comments fa-5x"></i>
+										</div>
+										<div class="col-xs-9 text-right">
+											<div class="huge">0</div>
+											<div>New Comments!</div>
+										</div>
+									</div>
+								</div>
+								<a href="#">
+									<div class="panel-footer">
+										<span class="pull-left">View Details</span>
+										<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+										<div class="clearfix"></div>
+									</div>
+								</a>
+							</div>
+							<div class="panel panel-red">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-support fa-5x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge">0</div>
+                                        <div>Support Tickets!</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="#">
+                                <div class="panel-footer">
+                                    <span class="pull-left">View Details</span>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </a>
+                        </div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<?php
+			endif;
+			/**
+			 * TODO: Move to partial use jQuery or Angular.
 			 * RevolutionCMS ASE Accounts
 			 */
 			if($action == 'accounts'):
@@ -274,6 +440,95 @@ $action		= isset($input['action'][0]) ? $input['action'] : 'dashboard';
 								<div class="form-group">
                                     <label for="disabledSelect">Last IP</label>
                                     <input class="form-control" type="text" value="<?php echo $users->getInfo($account_id, 'ip_last'); ?>" disabled>
+                                </div>
+								<button type="submit" class="btn btn-default">Submit</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			<?php
+			endif;
+			/**
+			 * TODO: Move to partial use jQuery or Angular.
+			 * RevolutionCMS ASE Emulator
+			 */
+			if($action == 'emulator'):
+			?>
+			<div id="page-wrapper">
+				<div class="container-fluid">
+					<!-- Page Heading -->
+					<div class="row">
+						<div class="col-lg-12">
+							<h1 class="page-header">Emulator</h1>
+							<ol class="breadcrumb">
+								<li><i class="fa fa-dashboard"></i>  <a href="<?php echo $domain; ?>/ase/dashboard">Dashboard</a></li>
+								<li class="active"><i class="fa fa-desktop"></i> Emulator</li>
+							</ol>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-12">
+							<h2>Placeholder</h2>
+						</div>
+					</div>
+				</div>
+			</div>
+			<?php
+			endif;
+			/**
+			 * TODO: Move to partial use jQuery or Angular.
+			 * RevolutionCMS ASE Hotel Settings
+			 */
+			if($action == 'settings'):
+			?>
+			<div id="page-wrapper">
+				<div class="container-fluid">
+					<!-- Page Heading -->
+					<div class="row">
+						<div class="col-lg-12">
+							<h1 class="page-header">Hotel Settings</h1>
+							<ol class="breadcrumb">
+								<li><i class="fa fa-dashboard"></i>  <a href="<?php echo $domain; ?>/ase/dashboard">Dashboard</a></li>
+								<li class="active"><i class="fa fa-wrench"></i> Settings</li>
+							</ol>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-10">
+							<form role="form">
+								<div class="form-group">
+                                    <label for="disabledSelect">Hotel Name</label>
+                                    <input class="form-control" type="text" value="<?php echo $core::getHotelName(); ?>" disabled>
+                                </div>
+								<div class="form-group">
+                                    <label for="disabledSelect">Hotel Description</label>
+                                    <input class="form-control" type="text" value="<?php echo $core::getHotelDesc(); ?>" disabled>
+                                </div>
+								<div class="form-group">
+                                    <label for="disabledSelect">Hotel Url</label>
+                                    <input class="form-control" type="text" value="<?php echo $core::getHotelUrl(); ?>" disabled>
+                                </div>
+								<div class="form-group">
+									<label>Theme</label>
+									<select class="form-control" disabled>
+									<?php
+										$ctheme = $core::getHotelTheme();
+										foreach($core::getThemes() as $theme)
+											echo sprintf('<option %s>%s</option>', ($ctheme == $theme) ? 'selected="selected"' : '', $theme) . PHP_EOL;
+									?>
+									</select>
+								</div>
+								<div class="form-group">
+                                    <label for="disabledSelect">Hotel Build</label>
+                                    <input class="form-control" type="text" value="<?php echo $core::getHotelWebBuild(); ?>" disabled>
+                                </div>
+								<div class="form-group">
+                                    <label for="disabledSelect">Hotel Maintenance</label>
+                                    <select class="form-control" disabled>
+										<option>False</option>
+										<option>True</option>
+									</select>
                                 </div>
 								<button type="submit" class="btn btn-default">Submit</button>
 							</form>
