@@ -1,10 +1,10 @@
 <?php
 /**
  * RevolutionCMS
- *
+ * 
  * @author	Kryptos
  * @author	GarettM
- * @version	0.0.1
+ * @version 0.8.1
  */
  
 namespace Revolution\App\System;
@@ -180,7 +180,7 @@ class Engine
 		$result = $this->statement->fetch($mode);
 		
 		if(is_array($result))
-			$result = array_shift($result);
+			$result = $result[0];
 		
 		return $result;
 	}

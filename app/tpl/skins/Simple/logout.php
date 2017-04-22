@@ -4,7 +4,7 @@
  *
  * @author	Kryptos
  * @author	GarettM
- * @version	0.0.1
+ * @version	0.8.1
  */
  
 global $core;

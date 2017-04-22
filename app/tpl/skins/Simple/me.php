@@ -4,7 +4,7 @@
  *
  * @author	Kryptos
  * @author	GarettM
- * @version	0.0.1
+ * @version	0.8.1
  */
 
 global $template, $core, $engine, $users;
@@ -15,29 +15,29 @@ global $template, $core, $engine, $users;
 		<meta charset="utf-8"/>
 		<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<base href="{url}" />
+		<base href="{hotel.url}" />
 
-		<title>{hotelName} - Home</title>
-		<link rel="stylesheet" type="text/css" href="{url}/app/tpl/skins/Simple/css/main.css?rand={rand}" />
-		<meta name="description" content="{hotelDesc}"/>
+		<title>{hotel.name} - Home</title>
+		<link rel="stylesheet" type="text/css" href="{hotel.url}/app/tpl/skins/Simple/css/main.css?rand={rand}" />
+		<meta name="description" content="{hotel.desc}"/>
 	</head>
 	<body>
 		<nav>
 			<ul>
-				<li onclick="location.href='{url}/me'"><strong>Home</strong></li>
-				<li onclick="location.href='{url}/profile'">{username}</li>
-                <li onclick="location.href='{url}/ranking'">Ranking</li>
-				<li onclick="location.href='{url}/team'">Team</li>
-                <li onclick="location.href='{url}/news'">News</li>
-				<li onclick="window.open('{url}/client')">Enter</li>
-				<li onclick="location.href='{url}/logout'">Sign Out</li>
+				<li onclick="location.href='{hotel.url}/me'"><strong>Home</strong></li>
+				<li onclick="location.href='{hotel.url}/profile'">{account.username}</li>
+                <li onclick="location.href='{hotel.url}/ranking'">Ranking</li>
+				<li onclick="location.href='{hotel.url}/team'">Team</li>
+                <li onclick="location.href='{hotel.url}/news'">News</li>
+				<li onclick="window.open('{hotel.url}/client')">Enter</li>
+				<li onclick="location.href='{hotel.url}/logout'">Sign Out</li>
 			</ul>
         </nav>
         
         <header>
             <table width="100%">
                 <tr>
-                    <td width="25%" style="vertical-align: bottom;"><img src="{url}/app/tpl/skins/Simple/img/logo.png"/></td>
+                    <td width="25%" style="vertical-align: bottom;"><img src="{hotel.url}/app/tpl/skins/Simple/img/logo.png"/></td>
 					<td width="50%" rowspan="2">
 						<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 						<!-- responsive2 -->
@@ -50,11 +50,11 @@ global $template, $core, $engine, $users;
 						(adsbygoogle = window.adsbygoogle || []).push({});
 						</script>		
 					</td>
-					<td width="25%" style="vertical-align: bottom; text-align: right"><a href="{url}/client" target="_blank" class="btn green">Enter {hotelname} Hotel</a></td>
+					<td width="25%" style="vertical-align: bottom; text-align: right"><a href="{hotel.url}/client" target="_blank" class="btn green">Enter {hotel.name} Hotel</a></td>
 				</tr>
                 <tr>
-                    <td style="vertical-align: top; text-shadow: 0 0 3px #000;">{hoteldesc}</td>
-                    <td style="vertical-align: top; text-align: right"><span class="online online_users"><span class="online-count">{online}</span> online</span></td>
+                    <td style="vertical-align: top; text-shadow: 0 0 3px #000;">{hotel.desc}</td>
+                    <td style="vertical-align: top; text-align: right"><span class="online online_users"><span class="online-count">{hotel.online}</span> online</span></td>
                 </tr>
             </table>
         </header>
@@ -63,26 +63,26 @@ global $template, $core, $engine, $users;
 			<div class="col col-2-3 bg">
 				<table class="inner" height="302px" width="100%" border="0">
 					<tr>
-						<td rowspan="6" height="220px" width="200px" style="background: url('{url}/app/tpl/skins/Simple/img/white_sofa.png') 45px 105px no-repeat;">
+						<td rowspan="6" height="220px" width="200px" style="background: url('{hotel.url}/app/tpl/skins/Simple/img/white_sofa.png') 45px 105px no-repeat;">
 							<span style="display: block; background: url('http://www.habbo.nl/habbo-imaging/avatarimage?figure={figure}&direction=2&head_direction=2&gesture=sml&action=sit,crr=6&size=m') 80px 30px no-repeat; height: 220px;"></span>
 						</td>
 						<td style="border-bottom: 1px solid #d3d3d3;">
-							<span style="background: url('{url}/app/tpl/skins/Simple/img/user.gif') 12px center no-repeat; padding-left: 30px;"><b>Username</b> <span style="float: right;"><i>{username}</i></span></span>
+							<span style="background: url('{hotel.url}/app/tpl/skins/Simple/img/user.gif') 12px center no-repeat; padding-left: 30px;"><b>Username</b> <span style="float: right;"><i>{account.username}</i></span></span>
 						</td>
 					</tr>
 					<tr>
 						<td style="border-bottom: 1px solid #d3d3d3;">
-							<span style="background: url('{url}/app/tpl/skins/Simple/img/motto.png') 10px center no-repeat; padding-left: 30px;"><b>Motto</b> <span style="float: right;"><i>{motto}</i></span></span>
+							<span style="background: url('{hotel.url}/app/tpl/skins/Simple/img/motto.png') 10px center no-repeat; padding-left: 30px;"><b>Motto</b> <span style="float: right;"><i>{account.motto}</i></span></span>
 						</td>
 					</tr>
 					<tr>
 						<td style="border-bottom: 1px solid #d3d3d3;">
-							<span style="background: url('{url}/app/tpl/skins/Simple/img/credit.gif') 10px center no-repeat; padding-left: 30px;"><b>Credits</b> <span style="float: right;"><i>{coins}</i></span></span>
+							<span style="background: url('{hotel.url}/app/tpl/skins/Simple/img/credit.gif') 10px center no-repeat; padding-left: 30px;"><b>Credits</b> <span style="float: right;"><i>{account.credits}</i></span></span>
 						</td>
 					</tr>
 					<tr>
 						<td style="border-bottom: 1px solid #d3d3d3;">
-							<span style="background: url('{url}/app/tpl/skins/Simple/img/pixel.gif') 10px center no-repeat; padding-left: 30px;"><b>Pixels</b> <span style="float: right;"><i>{pixels}</i></span></span>
+							<span style="background: url('{hotel.url}/app/tpl/skins/Simple/img/pixel.gif') 10px center no-repeat; padding-left: 30px;"><b>Pixels</b> <span style="float: right;"><i>{account.activity_points}</i></span></span>
 						</td>
 					</tr>
 					<tr>
@@ -96,7 +96,7 @@ global $template, $core, $engine, $users;
 								}
 								else {
 									foreach($badges as $badge)
-										echo sprintf('<span style="display: inline-block; background: url(%s/c_images/badges/%s.gif) center no-repeat; margin 0 14px; width: 50px; height: 50px;"></span>', $core::getHotelSwfFolder(), $badge['badge_id']);
+										echo sprintf('<span style="display: inline-block; background: url(%s/c_images/badges/%s.gif) center no-repeat; margin 0 14px; width: 50px; height: 50px;"></span>', $core::getswfPath(), $badge['badge_id']);
 								}
 							?>
 						</td>
@@ -111,7 +111,7 @@ global $template, $core, $engine, $users;
 						$articles = $engine->select('cms_news', array(), array('*'), array('id' => 'DESC'), 3)->fetchAll();
 						foreach($articles as $article):
 					?>
-					<a href="{url}/article/<?php echo $article['id'] ?>" style="text-decoration: none;">
+					<a href="{hotel.url}/article/<?php echo $article['id'] ?>" style="text-decoration: none;">
 						<div class="me-news">
 							<div class="me-news-bg" style="background: url('http://image.hybridhotel.pw/c_images/Top_Story_Images/<?php echo $article['image'] ?>') center no-repeat;">
 								<div style="padding: 5px;">
@@ -162,12 +162,12 @@ global $template, $core, $engine, $users;
 			</div>
 			<div class="col col-1 bg">
 				<div class="inner footer">
-					<span>Copyright &copy; 2017 <a href="{url}">{hotelname}</a>.</span><br>
+					<span>Copyright &copy; 2017 <a href="{hotel.url}">{hotel.name}</a>.</span><br>
 					<span>Powered by <a href="https://github.com/GarettMcCarty/RevCMS">RevCMS</a>.</span>
 				</div>
 			</div>
 		</main>
-		<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-		<script src="{url}/app/tpl/skins/Simple/js/online.js"></script>
+		<script src="{hotel.url}/app/tpl/skins/Simple/js/jquery-3.2.1.min.js"></script>
+		<script src="{hotel.url}/app/tpl/skins/Simple/js/online.js"></script>
 	</body>
 </html>

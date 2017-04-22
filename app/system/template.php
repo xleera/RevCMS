@@ -1,10 +1,10 @@
 <?php
 /**
  * RevolutionCMS
- *
+ * 
  * @author	Kryptos
  * @author	GarettM
- * @version	0.0.1
+ * @version 0.8.1
  */
  
 namespace Revolution\App\System;
@@ -76,50 +76,56 @@ class Template
 		$users	= Users::getInstance();
 		$core   = Core::getInstance();
 		
-		$this->setParams('hotelName',		$core::getHotelName());
-		$this->setParams('hotelDesc',		$core::getHotelDesc());
-		$this->setParams('url', 			$core::getHotelUrl());
-		$this->setParams('online', 			$core::getOnline());
+		$this->setParams('hotel.name',			$core::getHotelName());
+		$this->setParams('hotel.desc',			$core::getHotelDescription());
+		$this->setParams('hotel.url',			$core::getHotelUrl());
+		$this->setParams('hotel.online',		$core::getOnlineCount());
+		$this->setParams('hotel.registered',	$core::getRegisteredCount());
+		$this->setParams('hotel.uri',			isset($_GET['url']) ? $core::secure($_GET['url']) : '');
 		
-		$this->setParams('server.address',			$core::getServerAddress());
-		$this->setParams('server.port',				$core::getServerPort());
-		$this->setParams('client.build',			$core::getHotelWebBuild());
-		$this->setParams('client.external_vars',	$core::getHotelExternalVar());
-		$this->setParams('client.external_texts',	$core::getHotelExternalTxt());
-		$this->setParams('client.swf_folder',		$core::getHotelSwfFolder());
+		$this->setParams('emu.address',			$core::getEmulatorAddress());
+		$this->setParams('emu.port',			$core::getEmulatorPort());
 		
-		$this->setParams('last_uri',		isset($_GET['url']) ? $core::secure($_GET['url']) : '');
-		
-		$this->setParams('users.registered', $core::getRegisteredCount());
-		
-		if(defined('REV_DEVELOPMENT'))
-			$this->setParams('rand', sha1(rand(2, 888)));
+		$this->setParams('swf.build',			$core::getSwfBuild());
+		$this->setParams('swf.path',			$core::getSwfPath());
 		
 		if($users->isLogged())
 		{
-			$this->setParams('username',	 $users->getInfo($_SESSION['account']['id'], 'username'));
-			$this->setParams('rank',		 $users->getInfo($_SESSION['account']['id'], 'rank'));
-			$this->setParams('motto',		 $users->getInfo($_SESSION['account']['id'], 'motto'));
-			$this->setParams('email', 		 $users->getInfo($_SESSION['account']['id'], 'mail'));
-			$this->setParams('sso',			 $users->getInfo($_SESSION['account']['id'], 'auth_ticket'));
-			$this->setParams('coins',		 $users->getInfo($_SESSION['account']['id'], 'credits'));
-			$this->setParams('pixels',		 $users->getInfo($_SESSION['account']['id'], 'activity_points'));
-			$this->setParams('figure',		 $users->getInfo($_SESSION['account']['id'], 'look'));
+			foreach($_SESSION['account'] as $key => $value)
+			{
+				$this->setParams("account.{$key}", $users->getInfo($_SESSION['account']['id'], $key));
+			}
+			
 			$this->setParams('housekeeping', '');
 			
 			if($users->isStaffMember($_SESSION['account']['username']))
 			{
-				$this->setParams('housekeeping', '<li><a href="' . $this->params['url'] . '/ase" class="ase-portal">Housekeeping</a></li>');
+				$this->setParams('housekeeping', '<li><a href="{hotel.url}/ase" class="ase-portal">Housekeeping</a></li>');
 			}
 		}
 		
+		$direction = 2;
+		$xusers = $engine->select('users', array(), array('username', 'look'), array('id' => 'DESC'), 3)->fetchAll();
+		$this->setParams('registered.recent', '');
+		foreach($xusers as $user)
+		{
+			$this->setParams('registered.recent', sprintf('<tr><td class="rec-list-user" style="background: url(http://www.habbo.nl/habbo-imaging/avatarimage?figure=%s&head_direction=%d&gesture=sml&headonly=1) top center no-repeat;">%s<hr /></td></tr>', $user['look'], $direction, $user['username']));
+			$direction++;
+		}
+		
+		$random = $engine->select('users', array(), array('username', 'look'), array('RAND()' => ''), 1)->fetchAll()[0];
+		$this->setParams('registered.random.username',	$random['username']);
+		$this->setParams('registered.random.look', 		$random['look']);
+		
 		$request = isset($_GET['url']) ? $core::secure($_GET['url']) : 'index';
+		
 		if(in_array($request, array('article', 'news')))
 		{
 			$default = $engine->select('cms_news', array(), array('*'), array('id' => 'DESC'), 1)->fetch();
 			$id = isset($_GET['article']) ? intval($_GET['article']) : $default;
 		
 			$articles = $engine->query('SELECT title, id FROM cms_news WHERE id != :id LIMIT 10', array('id' => $id));
+			$this->setParams('newsList', '');
 			foreach($articles as $article)
 				$this->setParams('newsList', sprintf('<a href="%s/article/%d">%s</a><br />', $core::getHotelUrl(), $article['id'], $article['title']));
 			
@@ -152,6 +158,49 @@ class Template
 				}
 			}
 		}
+		
+		if(in_array($request, array('profile')))
+		{
+			$account = isset($_GET['user']) ? $core::secure($_GET['user']) : $_SESSION['account']['id'];
+			if(!is_numeric($account))
+				$account = $users->getId($account);
+			
+			if(!$users->nameTaken($users->getInfo($account, 'username')))
+				$account = $_SESSION['account']['id'];
+			
+			
+			$this->setParams('profile.id',				$account);
+			$this->setParams('profile.username',		$users->getInfo($account, 'username'));
+			$this->setParams('profile.mail',			$users->getInfo($account, 'mail'));
+			$this->setParams('profile.rank',			$users->getInfo($account, 'rank'));
+			$this->setParams('profile.credits',			$users->getInfo($account, 'credits'));
+			$this->setParams('profile.activity_points', $users->getInfo($account, 'activity_points'));
+			$this->setParams('profile.look',			$users->getInfo($account, 'look'));
+			$this->setParams('profile.gender',			$users->getInfo($account, 'gender'));
+			$this->setParams('profile.motto',			$users->getInfo($account, 'motto'));
+			$this->setParams('profile.account_created', date('d/m/Y, H:i', $users->getInfo($account, 'account_created')));
+			$this->setParams('profile.last_online',		date('d/m/Y, H:i', $users->getInfo($account, 'last_online')));
+			
+			$badges = $engine->query("SELECT * FROM user_badges WHERE user_id = '" . $account . "' AND badge_slot >= 1 ORDER BY badge_slot DESC LIMIT 5");
+			if(empty($badges) || !$badges)
+			{
+				$this->setParams('profile.badges', '<i>No active badges');
+			}
+			else {
+				foreach($badges as $badge)
+					$this->setParams('profile.badges', sprintf('<span style="display: inline-block; background: url(%s/c_images/badges/%s.gif) center no-repeat; margin 0 14px; width: 50px; height: 50px;"></span>', $core::getSwfPath(), $badge['badge_id']));
+			}
+			
+			$friends = $engine->query("SELECT id, username, look FROM users WHERE `id` IN (SELECT `user_one_id` FROM `messenger_friendships` WHERE `user_two_id`='{$account}') ORDER BY id DESC");
+			if(empty($friends) || !$friends)
+			{
+				$this->setParams('profile.friends', '<i>No friends :(</i>');
+			}
+			else {
+				foreach($friends as $friend)
+					$this->setParams('profile.friends', sprintf('<a href="{hotel.url}/profile/%d"><img src="http://www.habbo.nl/habbo-imaging/avatarimage?figure=%s&size=s" /></a>', $friend['id'], $friend['look']));
+			}
+		}
 	}
 	
 	/**
@@ -180,6 +229,9 @@ class Template
 		{
 			if(is_array($value))
 				$value = json_encode($value);
+			
+			if(strpos($key, '{') !== false && strpos($key, '}') !== false)
+				$key = str_ireplace("{{$key}}", $value, $key);
 			
 			$content = str_ireplace("{{$key}}", $value, $content);
 		}

@@ -19,7 +19,7 @@ This document is created to help setup RevCMS and trouble shoot common problems.
 > - PHP 5.6 or Higher
 > - MySQL 5.1 or Higher
 
-Download [Release 0.0.1](#location) and Unpack the archive to `C:\Inetpub\wwwroot\` or another folder you have setup for IIS to use.
+Download [Master Release](https://github.com/GarettMcCarty/RevCMS/archive/master.zip) and Unpack the archive to `C:\Inetpub\wwwroot\` or another folder you have setup for IIS to use.
 
 Before you can install RevCMS a new database must be created, for MySQL a tool like [ MySQL Workbench](https://www.mysql.com/products/workbench/) can be used.
 

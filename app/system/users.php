@@ -1,10 +1,10 @@
 <?php
 /**
  * RevolutionCMS
- *
+ * 
  * @author	Kryptos
  * @author	GarettM
- * @version	0.0.1
+ * @version 0.8.1
  */
  
 namespace Revolution\App\System;
@@ -395,7 +395,7 @@ class Users
 	public function getID($username)
 	{
 		$id = $this->engine->select('users', array('username' => $username), 'id', array(), 1)->fetch();
-		return !is_null($id) ? $id : 0;
+		return !is_null($id) ? (int)$id : 0;
 	}
 	
 	/**

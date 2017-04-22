@@ -1,10 +1,10 @@
 <?php
 /**
  * RevolutionCMS
- *
+ * 
  * @author	Kryptos
  * @author	GarettM
- * @version	0.0.1
+ * @version 0.8.1
  */
 
 /**
@@ -270,6 +270,49 @@ try {
 				
 				$response['content'] = $result;
 				$response['success'] = true;
+				break;
+			/**
+			 * All Seeing Eye
+			 */
+			case 'ase_dashboard':
+				$core = Revolution\App\System\Core::getInstance();
+				
+				$response['success'] = true;
+				$response['content'] = array('uptime' => '', 'online' => $core::getOnlineCount(), 'registered' => $core::getRegisteredCount());
+				break;
+			case 'ase_account_list':
+				$engine = Revolution\App\System\Engine::getInstance();				
+				$response['success'] = true;
+				$response['content'] = $engine->select('users')->fetchAll();
+				break;
+			case 'ase_account_edit':
+				$engine = Revolution\App\System\Engine::getInstance();				
+				$response['content'] = 'Function not implemented';
+				break;
+			case 'ase_account_view':
+				$engine = Revolution\App\System\Engine::getInstance();
+				$id = isset($input['id']) ? $input['id'] : null;
+				
+				if(is_null($id))
+				{
+					$response['content'] = 'No account selected';
+				}
+				else {
+					$response['success'] = true;
+					$account = $engine->select('users', array('id' => $id))->fetchAll()[0];
+					
+					$response['content'] = array();
+					$response['content']['id']				= $account['id'];
+					$response['content']['username']		= $account['username'];
+					$response['content']['mail']			= $account['mail'];
+					$response['content']['rank']			= $account['rank'];
+					$response['content']['credits']			= $account['credits'];
+					$response['content']['activity_points'] = $account['activity_points'];
+					$response['content']['look']			= $account['look'];
+					$response['content']['gender']			= $account['gender'];
+					$response['content']['motto']			= $account['motto'];
+					$response['content']['vip']				= $account['vip'];
+				}
 				break;
 	}
 	

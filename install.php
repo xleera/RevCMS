@@ -1,10 +1,13 @@
 <?php
 /**
  * RevolutionCMS
- *
+ * 
  * @author	Kryptos
  * @author	GarettM
- * @version	0.0.1
+ * @version 0.8.1
+ *
+ * @TODO:
+ *	Remove the PHP in installer template to javascript and do.php
  */
 
 /**
@@ -28,7 +31,7 @@ spl_autoload_register (new Rev\App\Autoload(dirname(__FILE__)));
 
 		<title>RevolutionCMS - Installation</title>
 
-		<link rel="stylesheet" href="app/tpl/system/css/install.css?<?php echo rand(1, 99); ?>">
+		<link rel="stylesheet" href="app/tpl/system/css/install.css">
 
 		<!--[if lt IE 9]>
 			<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -65,7 +68,7 @@ spl_autoload_register (new Rev\App\Autoload(dirname(__FILE__)));
 			<input type="text" name="url" placeholder="Hotel Url" value="<?php echo str_ireplace('/install.php', '', "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"); ?>" />
 			<input type="text" name="name" placeholder="Hotel Name" />
 			<input type="text" name="desc" placeholder="Hotel Description" />
-			<input type="text" name="theme" list="themes" placeholder="Hotel Theme" value="<?php echo Rev\App\System\Core::getThemes()[0]; ?>">
+			<input type="text" name="theme" list="themes" placeholder="Hotel Theme" value="Simple">
 			<datalist id="themes">
 				<?php
 					/**

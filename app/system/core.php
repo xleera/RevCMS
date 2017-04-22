@@ -1,10 +1,10 @@
 <?php
 /**
  * RevolutionCMS
- *
+ * 
  * @author	Kryptos
  * @author	GarettM
- * @version	0.0.1
+ * @version 0.8.1
  */
  
 namespace Revolution\App\System;
@@ -56,16 +56,6 @@ class Core
 	public static function secure($value)
 	{
 		return trim(htmlspecialchars($value, ENT_QUOTES, 'UTF-8'));
-	}
-	
-	/**
-	 * Get the ammount of users online
-	 * @return int
-	 */
-	public static function getOnline()
-	{
-		$engine = Engine::getInstance();
-		return $engine->select('server_status', array(), 'users_online')->fetch();
 	}
 	
 	/**
@@ -127,7 +117,7 @@ class Core
 	 * Get the hotel description
 	 * @return string
 	 */
-	public static function getHotelDesc()
+	public static function getHotelDescription()
 	{
 		$core = self::getInstance();
 		return $core->cms_settings('hotel_desc');
@@ -150,67 +140,47 @@ class Core
 	public static function getHotelTheme()
 	{
 		$core = self::getInstance();
-		return $core->cms_settings('hotel_theme', 'Priv');
+		return $core->cms_settings('hotel_theme', 'Simple');
 	}
 	
 	/**
 	 * Get the hotel emulator address
 	 * @return string
 	 */
-	public static function getServerAddress()
+	public static function getEmulatorAddress()
 	{
 		$core = self::getInstance();
-		return $core->cms_settings('hotel_server_addr');
+		return $core->cms_settings('emu_address');
 	}
 	
 	/**
 	 * Get the hotel emulator port
 	 * @return int
 	 */
-	public static function getServerPort()
+	public static function getEmulatorPort()
 	{
 		$core = self::getInstance();
-		return $core->cms_settings('hotel_server_port');
+		return $core->cms_settings('emu_port');
 	}
 	
 	/**
-	 * Get the hotel web build
+	 * Get the swf build.
 	 * @return string
 	 */
-	public static function getHotelWebBuild()
+	public static function getSwfBuild()
 	{
 		$core = self::getInstance();
-		return $core->cms_settings('hotel_build');
+		return $core->cms_settings('swf_build');
 	}
 	
 	/**
-	 * Get the hotel external variables file
+	 * Get the swf path.
 	 * @return string
 	 */
-	public static function getHotelExternalVar()
+	public static function getSwfPath()
 	{
 		$core = self::getInstance();
-		return $core->cms_settings('hotel_external_vars');
-	}
-	
-	/**
-	 * Get the hotel external texts path
-	 * @return string
-	 */
-	public static function getHotelExternalTxt()
-	{
-		$core = self::getInstance();
-		return $core->cms_settings('hotel_external_texts');
-	}
-	
-	/**
-	 * Get the hotel swf folder
-	 * @return string
-	 */
-	public static function getHotelSwfFolder()
-	{
-		$core = self::getInstance();
-		return $core->cms_settings('hotel_swf_folder');
+		return $core->cms_settings('swf_path');
 	}
 	
 	/**
@@ -220,7 +190,17 @@ class Core
 	public static function getRegisteredCount()
 	{
 		$engine = engine::getInstance();
-		$result = $engine->query('SELECT count(*) FROM users');
+		return $engine->select('users')->countRows();
+	}
+	
+	/**
+	 * Get the ammount of users online
+	 * @return int
+	 */
+	public static function getOnlineCount()
+	{
+		$engine = Engine::getInstance();
+		return $engine->select('server_status', array(), 'users_online')->fetch();
 	}
 	
 	/**
