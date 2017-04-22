@@ -88,33 +88,33 @@ try {
 			break;
 		case 'account_view':
 			$engine  = Revolution\App\System\Engine::getInstance();
-			$account = isset($input['username']) ? $username : 
-				isset($input['email']) ? $input['email'] : 
-					isset($input['id']) ? $input['id'] :
-						null;
-					
-			if(!is_null($account))
+			$users	 = Revolution\App\System\Users::getInstance();
+			
+			$account = null;
+			
+			if(isset($input['username']))
+				$account = $users->getID($input['username']);
+			
+			if(isset($input['id']))
+				$account = $input['id'];
+			
+			if(is_null($account))
 			{
-				if(is_int($account))
-					$account = $users->getInfo($account, 'mail');
-				
-				if(!$users->nameTaken($account) && !$users->emailTaken($account))
-				{
-					$response['content'] = 'No account exists';
-					break;
-				}
-				
-				if($users->validEmail($account))
-				{
-					$account = $users->getUsername($account);
-				}
-				
-				$response['success'] = true;
-				$response['content'] = $engine->select('users', array('username' => $account))->fetch();
+				$response['content'] = sprintf('No account id: %d', $account);
+				break;
 			}
-			else {
-				$response['content'] = 'No account selected';
-			}
+			
+			
+			$response['success'] = true;
+			$account = $engine->select('users', array('id' => $account))->fetchAll()[0];
+			$response['content'] = array();
+			$response['content']['id'] = $account['id'];
+			$response['content']['username'] = $account['username'];
+			$response['content']['mail'] = $account['mail'];
+			$response['content']['credits'] = $account['credits'];
+			$response['content']['activity_points'] = $account['activity_points'];
+			$response['content']['look'] = $account['look'];
+			$response['content']['motto'] = $account['motto'];
 			break;
 			/**
 			 * Installer

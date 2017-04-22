@@ -106,7 +106,7 @@ class Template
 		
 		$direction = 2;
 		$xusers = $engine->select('users', array(), array('username', 'look'), array('id' => 'DESC'), 3)->fetchAll();
-		$this->setParams('registered.recent', '');
+	
 		foreach($xusers as $user)
 		{
 			$this->setParams('registered.recent', sprintf('<tr><td class="rec-list-user" style="background: url(http://www.habbo.nl/habbo-imaging/avatarimage?figure=%s&head_direction=%d&gesture=sml&headonly=1) top center no-repeat;">%s<hr /></td></tr>', $user['look'], $direction, $user['username']));
@@ -162,12 +162,12 @@ class Template
 		if(in_array($request, array('profile')))
 		{
 			$account = isset($_GET['user']) ? $core::secure($_GET['user']) : $_SESSION['account']['id'];
+			
+			if(isset($_GET['id']))
+				$account = intval($core::secure($_GET['id']));
+			
 			if(!is_numeric($account))
 				$account = $users->getId($account);
-			
-			if(!$users->nameTaken($users->getInfo($account, 'username')))
-				$account = $_SESSION['account']['id'];
-			
 			
 			$this->setParams('profile.id',				$account);
 			$this->setParams('profile.username',		$users->getInfo($account, 'username'));
@@ -178,7 +178,7 @@ class Template
 			$this->setParams('profile.look',			$users->getInfo($account, 'look'));
 			$this->setParams('profile.gender',			$users->getInfo($account, 'gender'));
 			$this->setParams('profile.motto',			$users->getInfo($account, 'motto'));
-			$this->setParams('profile.account_created', date('d/m/Y, H:i', $users->getInfo($account, 'account_created')));
+			$this->setParams('profile.account_created', date('d/m/Y', $users->getInfo($account, 'account_created')));
 			$this->setParams('profile.last_online',		date('d/m/Y, H:i', $users->getInfo($account, 'last_online')));
 			
 			$badges = $engine->query("SELECT * FROM user_badges WHERE user_id = '" . $account . "' AND badge_slot >= 1 ORDER BY badge_slot DESC LIMIT 5");

@@ -144,11 +144,11 @@ class Users
 				return;
 			}
 			
-			//if(!$this->validEmail($template->form->input('reg_email')))
-			//{
-			//	$template->form->error('The email is not valid.');
-			//	return;
-			//}
+			if(!$this->validEmail($template->form->input('reg_email')))
+			{
+				$template->form->error('The email is not valid.');
+				return;
+			}
 			
 			if($this->emailTaken($template->form->input('reg_email')))
 			{
@@ -201,6 +201,12 @@ class Users
 				'credits' 	=> $credits,
 				// Pixels
 				'activity_points' => $pixels
+			));
+			
+			$badge = $this->engine->insert('user_badges', array(
+				'user_id'	=> $this->getID($template->form->input('reg_username')),
+				'badge_id'	=> 'Z63',
+				'badge_slot' => '1'
 			));
 			
 			if(!$id)
